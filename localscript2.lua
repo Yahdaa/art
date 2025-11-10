@@ -592,21 +592,38 @@ R.showArticle = function(articleId)
     separator.LayoutOrder = 5
     separator.Parent = R.articleViewFrame
     
-    -- Contenido del artículo (OPTIMIZADO PARA MÓVIL)
+    -- Contenido del artículo (CONTENIDO DENTRO DE CONTENEDOR)
+    local contentContainer = Instance.new("Frame")
+    contentContainer.Size = UDim2.new(1, 0, 0, 0)
+    contentContainer.AutomaticSize = Enum.AutomaticSize.Y
+    contentContainer.BackgroundColor3 = Color3.fromRGB(248, 248, 248)
+    contentContainer.BorderSizePixel = 0
+    contentContainer.LayoutOrder = 6
+    contentContainer.Parent = R.articleViewFrame
+    
+    local contentCorner = Instance.new("UICorner")
+    contentCorner.CornerRadius = UDim.new(0, 8)
+    contentCorner.Parent = contentContainer
+    
+    local contentPadding = Instance.new("UIPadding")
+    contentPadding.PaddingLeft = UDim.new(0, 15)
+    contentPadding.PaddingRight = UDim.new(0, 15)
+    contentPadding.PaddingTop = UDim.new(0, 15)
+    contentPadding.PaddingBottom = UDim.new(0, 15)
+    contentPadding.Parent = contentContainer
+    
     local articleContent = Instance.new("TextLabel")
     articleContent.Size = UDim2.new(1, 0, 0, 0)
     articleContent.AutomaticSize = Enum.AutomaticSize.Y
     articleContent.BackgroundTransparency = 1
     articleContent.Text = article.content
     articleContent.Font = Enum.Font.Gotham
-    articleContent.TextSize = 16 -- Reducido de 18 a 16 para mejor legibilidad en móvil
-    articleContent.TextColor3 = Color3.fromRGB(40, 40, 40) -- Más contraste
+    articleContent.TextSize = 15 -- Reducido para mejor ajuste
+    articleContent.TextColor3 = Color3.fromRGB(50, 50, 50)
     articleContent.TextXAlignment = Enum.TextXAlignment.Left
     articleContent.TextYAlignment = Enum.TextYAlignment.Top
     articleContent.TextWrapped = true
-    articleContent.LineHeight = 1.4 -- Mejor espaciado entre líneas
-    articleContent.LayoutOrder = 6
-    articleContent.Parent = R.articleViewFrame
+    articleContent.Parent = contentContainer
     
     -- Actualizar CanvasSize para permitir scroll completo
     task.wait(0.1)
@@ -861,8 +878,7 @@ R.createHomeSection = function(title, articles, parent, layoutOrder)
         local cardDesc = Instance.new("TextLabel")
         cardDesc.Size = UDim2.new(1, 0, 0, 40) -- Reducido de 60 a 40
         cardDesc.BackgroundTransparency = 1
-        local previewText = article.description or article.content or ""
-        cardDesc.Text = string.sub(previewText, 1, 40) .. "..." -- Solo 40 caracteres
+        cardDesc.Text = string.sub(article.description or "Sin descripción", 1, 35) .. "..." -- SOLO description, NUNCA content
         cardDesc.Font = Enum.Font.Gotham
         cardDesc.TextSize = 12 -- Reducido de 14 a 12
         cardDesc.TextColor3 = Color3.fromRGB(100, 100, 100)
@@ -963,8 +979,7 @@ R.createArticleCard = function(article, parent, index)
     local resultDesc = Instance.new("TextLabel")
     resultDesc.Size = UDim2.new(1, 0, 0, 30) -- Reducido de 38 a 30
     resultDesc.BackgroundTransparency = 1
-    local previewText = article.description or article.content or ""
-    resultDesc.Text = string.sub(previewText, 1, 50) .. "..." -- Solo 50 caracteres
+    resultDesc.Text = string.sub(article.description or "Sin descripción", 1, 45) .. "..." -- SOLO description, NUNCA content
     resultDesc.Font = Enum.Font.Gotham
     resultDesc.TextSize = 13 -- Reducido de 15 a 13
     resultDesc.TextColor3 = Color3.fromRGB(70, 70, 70)
