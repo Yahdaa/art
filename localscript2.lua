@@ -606,10 +606,10 @@ R.showArticle = function(articleId)
     contentCorner.Parent = contentContainer
     
     local contentPadding = Instance.new("UIPadding")
-    contentPadding.PaddingLeft = UDim.new(0, 15)
-    contentPadding.PaddingRight = UDim.new(0, 15)
-    contentPadding.PaddingTop = UDim.new(0, 15)
-    contentPadding.PaddingBottom = UDim.new(0, 15)
+    contentPadding.PaddingLeft = UDim.new(0, 25)
+    contentPadding.PaddingRight = UDim.new(0, 25)
+    contentPadding.PaddingTop = UDim.new(0, 20)
+    contentPadding.PaddingBottom = UDim.new(0, 20)
     contentPadding.Parent = contentContainer
     
     local articleContent = Instance.new("TextLabel")
@@ -618,11 +618,13 @@ R.showArticle = function(articleId)
     articleContent.BackgroundTransparency = 1
     articleContent.Text = article.content
     articleContent.Font = Enum.Font.Gotham
-    articleContent.TextSize = 15 -- Reducido para mejor ajuste
+    articleContent.TextSize = 16
     articleContent.TextColor3 = Color3.fromRGB(50, 50, 50)
     articleContent.TextXAlignment = Enum.TextXAlignment.Left
     articleContent.TextYAlignment = Enum.TextYAlignment.Top
     articleContent.TextWrapped = true
+    articleContent.TextScaled = false
+    articleContent.RichText = true
     articleContent.Parent = contentContainer
     
     -- Actualizar CanvasSize para permitir scroll completo
@@ -1058,39 +1060,83 @@ R.createArticleCard = function(article, parent, index)
     divider.Parent = resultCard
 end
  
-R.loadArticles = function(query)
-    for _, child in ipairs(R.resultsScrollFrame:GetChildren()) do
-        if child:IsA("Frame") then
-            child:Destroy()
+-- Variables para scroll infinito
+R.currentArticles = {}
+R.articlesPerPage = 10
+R.currentPage = 1
+R.isLoadingMore = false
+R.hasMoreArticles = true
+R.currentQuery = ""
+
+R.loadArticles = function(query, isLoadMore)
+    if not isLoadMore then
+        -- Nueva búsqueda - limpiar todo
+        for _, child in ipairs(R.resultsScrollFrame:GetChildren()) do
+            if child:IsA("Frame") then
+                child:Destroy()
+            end
         end
+        R.currentArticles = {}
+        R.currentPage = 1
+        R.hasMoreArticles = true
+        R.currentQuery = query or ""
     end
     
-    local success, articles = pcall(function()
-        return R.getArticlesEvent:InvokeServer(query)
-    end)
-    
-    if not success or not articles then
-        warn("Error al cargar artículos")
+    if R.isLoadingMore or not R.hasMoreArticles then
         return
     end
     
-    if #articles == 0 then
+    R.isLoadingMore = true
+    
+    local success, allArticles = pcall(function()
+        return R.getArticlesEvent:InvokeServer(R.currentQuery)
+    end)
+    
+    if not success or not allArticles then
+        warn("Error al cargar artículos")
+        R.isLoadingMore = false
+        return
+    end
+    
+    -- Calcular artículos para esta página
+    local startIndex = (R.currentPage - 1) * R.articlesPerPage + 1
+    local endIndex = math.min(startIndex + R.articlesPerPage - 1, #allArticles)
+    
+    if startIndex > #allArticles then
+        R.hasMoreArticles = false
+        R.isLoadingMore = false
+        return
+    end
+    
+    -- Agregar nuevos artículos
+    for i = startIndex, endIndex do
+        local article = allArticles[i]
+        table.insert(R.currentArticles, article)
+        R.createArticleCard(article, R.resultsScrollFrame, #R.currentArticles)
+    end
+    
+    -- Verificar si hay más artículos
+    if endIndex >= #allArticles then
+        R.hasMoreArticles = false
+    else
+        R.currentPage = R.currentPage + 1
+    end
+    
+    -- Mostrar mensaje si no hay artículos en la primera carga
+    if #R.currentArticles == 0 and R.currentPage == 1 then
         local noResults = Instance.new("TextLabel")
         noResults.Size = UDim2.new(1, 0, 0, 100)
         noResults.BackgroundTransparency = 1
-        noResults.Text = query == "" and "No hay artículos disponibles" or "No se encontraron resultados para " .. query
+        noResults.Text = R.currentQuery == "" and "No hay artículos disponibles" or "No se encontraron resultados para " .. R.currentQuery
         noResults.Font = Enum.Font.Gotham
         noResults.TextSize = 18
         noResults.TextColor3 = Color3.fromRGB(150, 150, 150)
         noResults.Parent = R.resultsScrollFrame
-    else
-        for i, article in ipairs(articles) do
-            R.createArticleCard(article, R.resultsScrollFrame, i)
-        end
     end
     
     task.wait(0.1)
     R.resultsScrollFrame.CanvasSize = UDim2.new(0, 0, 0, R.resultsLayout.AbsoluteContentSize.Y + 60)
+    R.isLoadingMore = false
 end
  
 -- Función para abrir reproductor de música

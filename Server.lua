@@ -324,11 +324,15 @@ publishArticleFunction.OnServerInvoke = function(player, title, description, cat
         end
     end
     
+    -- Procesar contenido para saltos de línea correctos
+    local processedContent = string.gsub(description, "\n\n", "<br/><br/>")
+    processedContent = string.gsub(processedContent, "\n", "<br/>")
+    
     local newArticle = {
     id = generateId(),
     title = title,
-    description = description,
-    content = description,
+    description = string.sub(description, 1, 150), -- Descripción corta para vistas previas
+    content = processedContent, -- Contenido completo con saltos de línea
     category = category or "General",
     author = isSystemArticle and "Sistema" or player.Name,
     authorId = isSystemArticle and 1 or player.UserId,
