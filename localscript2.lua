@@ -736,9 +736,9 @@ R.createMusicHomeSection = function(title, musicList, parent, layoutOrder)
         categoryLabel.LayoutOrder = 2
         categoryLabel.Parent = musicCard
         
-        -- Contenedor para autor (dentro de la tarjeta)
+        -- Contenedor para autor (CONTENIDO DENTRO de la tarjeta)
         local authorContainer = Instance.new("Frame")
-        authorContainer.Size = UDim2.new(1, -30, 0, 24)
+        authorContainer.Size = UDim2.new(1, -40, 0, 24) -- Más margen para evitar desbordamiento
         authorContainer.BackgroundTransparency = 1
         authorContainer.LayoutOrder = 3
         authorContainer.Parent = musicCard
@@ -746,11 +746,12 @@ R.createMusicHomeSection = function(title, musicList, parent, layoutOrder)
         local authorLabel = Instance.new("TextLabel")
         authorLabel.Size = UDim2.new(1, 0, 1, 0)
         authorLabel.BackgroundTransparency = 1
-        authorLabel.Text = "Por " .. music.author
+        authorLabel.Text = "Por " .. (string.len(music.author) > 12 and string.sub(music.author, 1, 12) .. "..." or music.author)
         authorLabel.Font = Enum.Font.Gotham
-        authorLabel.TextSize = 13
+        authorLabel.TextSize = 12
         authorLabel.TextColor3 = Color3.fromRGB(120, 120, 120)
         authorLabel.TextXAlignment = Enum.TextXAlignment.Left
+        authorLabel.TextTruncate = Enum.TextTruncate.AtEnd
         authorLabel.Parent = authorContainer
         
         musicCard.MouseButton1Click:Connect(function()
@@ -853,17 +854,18 @@ R.createHomeSection = function(title, articles, parent, layoutOrder)
         cardTitle.LayoutOrder = 1
         cardTitle.Parent = articleCard
         
-        -- Descripción
+        -- Descripción (LIMITADA para vista previa)
         local cardDesc = Instance.new("TextLabel")
         cardDesc.Size = UDim2.new(1, 0, 0, 60)
         cardDesc.BackgroundTransparency = 1
-        cardDesc.Text = string.sub(article.description, 1, 100) .. "..."
+        cardDesc.Text = string.sub(article.description, 1, 80) .. (string.len(article.description) > 80 and "..." or "")
         cardDesc.Font = Enum.Font.Gotham
         cardDesc.TextSize = 14
         cardDesc.TextColor3 = Color3.fromRGB(100, 100, 100)
         cardDesc.TextXAlignment = Enum.TextXAlignment.Left
         cardDesc.TextYAlignment = Enum.TextYAlignment.Top
         cardDesc.TextWrapped = true
+        cardDesc.TextTruncate = Enum.TextTruncate.AtEnd
         cardDesc.LayoutOrder = 2
         cardDesc.Parent = articleCard
         
@@ -879,9 +881,9 @@ R.createHomeSection = function(title, articles, parent, layoutOrder)
         categoryLabel.LayoutOrder = 3
         categoryLabel.Parent = articleCard
         
-        -- Contenedor para autor (DENTRO de la tarjeta con padding correcto)
+        -- Contenedor para autor (CONTENIDO DENTRO de la tarjeta)
         local authorContainer = Instance.new("Frame")
-        authorContainer.Size = UDim2.new(1, 0, 0, 20)
+        authorContainer.Size = UDim2.new(1, -30, 0, 20) -- Reducir ancho para que no se salga
         authorContainer.BackgroundTransparency = 1
         authorContainer.LayoutOrder = 4
         authorContainer.Parent = articleCard
@@ -889,23 +891,24 @@ R.createHomeSection = function(title, articles, parent, layoutOrder)
         local authorLayout = Instance.new("UIListLayout")
         authorLayout.FillDirection = Enum.FillDirection.Horizontal
         authorLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        authorLayout.Padding = UDim.new(0, 5)
+        authorLayout.Padding = UDim.new(0, 4)
         authorLayout.Parent = authorContainer
         
         local authorText = Instance.new("TextLabel")
         authorText.Size = UDim2.new(0, 0, 0, 20)
         authorText.AutomaticSize = Enum.AutomaticSize.X
         authorText.BackgroundTransparency = 1
-        authorText.Text = article.author
+        authorText.Text = string.len(article.author) > 12 and string.sub(article.author, 1, 12) .. "..." or article.author
         authorText.Font = Enum.Font.Gotham
-        authorText.TextSize = 13
+        authorText.TextSize = 12
         authorText.TextColor3 = Color3.fromRGB(0, 102, 204)
         authorText.TextXAlignment = Enum.TextXAlignment.Left
+        authorText.TextTruncate = Enum.TextTruncate.AtEnd
         authorText.Parent = authorContainer
         
         if article.verified then
             local badge = R.createVerifiedBadge()
-            badge.Size = UDim2.new(0, 14, 0, 14)
+            badge.Size = UDim2.new(0, 12, 0, 12)
             badge.Parent = authorContainer
         end
         
@@ -952,17 +955,18 @@ R.createArticleCard = function(article, parent, index)
         R.showArticle(article.id)
     end)
     
-    -- Descripción
+    -- Descripción (LIMITADA para vista previa)
     local resultDesc = Instance.new("TextLabel")
     resultDesc.Size = UDim2.new(1, 0, 0, 38)
     resultDesc.BackgroundTransparency = 1
-    resultDesc.Text = string.sub(article.description, 1, 150) .. (string.len(article.description) > 150 and "..." or "")
+    resultDesc.Text = string.sub(article.description, 1, 120) .. (string.len(article.description) > 120 and "..." or "")
     resultDesc.Font = Enum.Font.Gotham
     resultDesc.TextSize = 15
     resultDesc.TextColor3 = Color3.fromRGB(70, 70, 70)
     resultDesc.TextXAlignment = Enum.TextXAlignment.Left
     resultDesc.TextYAlignment = Enum.TextYAlignment.Top
     resultDesc.TextWrapped = true
+    resultDesc.TextTruncate = Enum.TextTruncate.AtEnd
     resultDesc.LayoutOrder = 2
     resultDesc.Parent = resultCard
     
@@ -978,9 +982,9 @@ R.createArticleCard = function(article, parent, index)
     categoryLabel.LayoutOrder = 3
     categoryLabel.Parent = resultCard
     
-    -- Autor (clickeable) con verificación AL LADO DEL NOMBRE - VERSIÓN CORRECTA
+    -- Autor (clickeable) con verificación - CONTENIDO DENTRO DEL RECUADRO
     local authorContainer = Instance.new("Frame")
-    authorContainer.Size = UDim2.new(1, 0, 0, 22)
+    authorContainer.Size = UDim2.new(1, -30, 0, 22) -- Reducir ancho para evitar desbordamiento
     authorContainer.BackgroundTransparency = 1
     authorContainer.LayoutOrder = 4
     authorContainer.Parent = resultCard
@@ -988,35 +992,37 @@ R.createArticleCard = function(article, parent, index)
     local authorLayout = Instance.new("UIListLayout")
     authorLayout.FillDirection = Enum.FillDirection.Horizontal
     authorLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    authorLayout.Padding = UDim.new(0, 5)
+    authorLayout.Padding = UDim.new(0, 4)
     authorLayout.Parent = authorContainer
     
     local authorButton = Instance.new("TextButton")
     authorButton.Size = UDim2.new(0, 0, 0, 18)
     authorButton.AutomaticSize = Enum.AutomaticSize.X
     authorButton.BackgroundTransparency = 1
-    authorButton.Text = article.author
+    authorButton.Text = string.len(article.author) > 15 and string.sub(article.author, 1, 15) .. "..." or article.author
     authorButton.Font = Enum.Font.Gotham
-    authorButton.TextSize = 14
+    authorButton.TextSize = 13
     authorButton.TextColor3 = Color3.fromRGB(0, 102, 204)
+    authorButton.TextTruncate = Enum.TextTruncate.AtEnd
     authorButton.Parent = authorContainer
     
     -- INSIGNIA AL LADO DEL NOMBRE
     if article.verified then
         local verifiedBadge = R.createVerifiedBadge()
-        verifiedBadge.Size = UDim2.new(0, 16, 0, 16)
+        verifiedBadge.Size = UDim2.new(0, 14, 0, 14)
         verifiedBadge.Parent = authorContainer
     end
     
-    -- FECHA SEPARADA (SIN INSIGNIA)
+    -- FECHA SEPARADA (SIN INSIGNIA) - MÁS COMPACTA
     local dateText = Instance.new("TextLabel")
     dateText.Size = UDim2.new(0, 0, 0, 18)
     dateText.AutomaticSize = Enum.AutomaticSize.X
     dateText.BackgroundTransparency = 1
-    dateText.Text = " • " .. article.dateCreated
+    dateText.Text = " • " .. string.sub(article.dateCreated, 1, 10) -- Solo fecha, sin hora
     dateText.Font = Enum.Font.Gotham
-    dateText.TextSize = 14
+    dateText.TextSize = 12
     dateText.TextColor3 = Color3.fromRGB(120, 120, 120)
+    dateText.TextTruncate = Enum.TextTruncate.AtEnd
     dateText.Parent = authorContainer
     
     authorButton.MouseButton1Click:Connect(function()
@@ -1272,13 +1278,15 @@ R.loadMusic = function(query)
             musicCategory.Parent = musicCard
             
             local musicAuthor = Instance.new("TextLabel")
-            musicAuthor.Size = UDim2.new(1, 0, 0, 18)
+            musicAuthor.Size = UDim2.new(1, -30, 0, 18) -- Reducir ancho para evitar desbordamiento
             musicAuthor.BackgroundTransparency = 1
-            musicAuthor.Text = "Por " .. music.author .. " • " .. music.dateCreated
+            local authorText = string.len(music.author) > 15 and string.sub(music.author, 1, 15) .. "..." or music.author
+            musicAuthor.Text = "Por " .. authorText .. " • " .. string.sub(music.dateCreated, 1, 10)
             musicAuthor.Font = Enum.Font.Gotham
-            musicAuthor.TextSize = 13
+            musicAuthor.TextSize = 12
             musicAuthor.TextColor3 = Color3.fromRGB(120, 120, 120)
             musicAuthor.TextXAlignment = Enum.TextXAlignment.Left
+            musicAuthor.TextTruncate = Enum.TextTruncate.AtEnd
             musicAuthor.LayoutOrder = 3
             musicAuthor.Parent = musicCard
             
