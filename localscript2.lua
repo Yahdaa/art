@@ -471,17 +471,18 @@ R.showArticle = function(articleId)
         end
     end
     
-    -- Título del artículo
+    -- Título del artículo (RESPONSIVE)
     local articleTitle = Instance.new("TextLabel")
     articleTitle.Size = UDim2.new(1, 0, 0, 0)
     articleTitle.AutomaticSize = Enum.AutomaticSize.Y
     articleTitle.BackgroundTransparency = 1
     articleTitle.Text = article.title
     articleTitle.Font = Enum.Font.GothamBold
-    articleTitle.TextSize = 36
+    articleTitle.TextSize = 24 -- Reducido de 36 a 24 para móvil
     articleTitle.TextColor3 = Color3.fromRGB(0, 0, 0)
     articleTitle.TextXAlignment = Enum.TextXAlignment.Left
     articleTitle.TextWrapped = true
+    articleTitle.TextScaled = true -- Escalar automáticamente
     articleTitle.LayoutOrder = 2
     articleTitle.Parent = R.articleViewFrame
     
@@ -497,9 +498,9 @@ R.showArticle = function(articleId)
     categoryLabel.LayoutOrder = 3
     categoryLabel.Parent = R.articleViewFrame
     
-    -- Información del autor (clickeable)
+    -- Información del autor (clickeable) - OPTIMIZADO PARA MÓVIL
     local authorContainer = Instance.new("TextButton")
-    authorContainer.Size = UDim2.new(1, 0, 0, 60)
+    authorContainer.Size = UDim2.new(1, 0, 0, 70) -- Aumentado para mejor espaciado en móvil
     authorContainer.BackgroundColor3 = Color3.fromRGB(250, 250, 250)
     authorContainer.BorderSizePixel = 0
     authorContainer.LayoutOrder = 4
@@ -515,10 +516,10 @@ R.showArticle = function(articleId)
         R.showUserProfile(article.authorId)
     end)
     
-    -- Foto del autor
+    -- Foto del autor (MÁS GRANDE PARA MÓVIL)
     local authorImage = Instance.new("ImageLabel")
-    authorImage.Size = UDim2.new(0, 45, 0, 45)
-    authorImage.Position = UDim2.new(0, 10, 0.5, -22.5)
+    authorImage.Size = UDim2.new(0, 50, 0, 50) -- Aumentado de 45 a 50
+    authorImage.Position = UDim2.new(0, 15, 0.5, -25) -- Centrado mejor
     authorImage.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
     authorImage.Image = article.authorThumbnail
     authorImage.Parent = authorContainer
@@ -527,10 +528,10 @@ R.showArticle = function(articleId)
     authorImageCorner.CornerRadius = UDim.new(1, 0)
     authorImageCorner.Parent = authorImage
     
-    -- Información del autor y fecha
+    -- Información del autor y fecha (MEJOR ESPACIADO)
     local authorInfoContainer = Instance.new("Frame")
-    authorInfoContainer.Size = UDim2.new(1, -70, 1, 0)
-    authorInfoContainer.Position = UDim2.new(0, 65, 0, 0)
+    authorInfoContainer.Size = UDim2.new(1, -80, 1, 0) -- Más espacio para el texto
+    authorInfoContainer.Position = UDim2.new(0, 75, 0, 0) -- Ajustado para nueva imagen
     authorInfoContainer.BackgroundTransparency = 1
     authorInfoContainer.Parent = authorContainer
     
@@ -554,14 +555,15 @@ R.showArticle = function(articleId)
     authorNameLayout.Parent = authorNameContainer
     
     local authorName = Instance.new("TextLabel")
-    authorName.Size = UDim2.new(0, 0, 0, 20)
+    authorName.Size = UDim2.new(0, 0, 0, 22) -- Aumentado para mejor legibilidad
     authorName.AutomaticSize = Enum.AutomaticSize.X
     authorName.BackgroundTransparency = 1
-    authorName.Text = "Por " .. article.author
+    authorName.Text = "Por " .. (string.len(article.author) > 20 and string.sub(article.author, 1, 20) .. "..." or article.author)
     authorName.Font = Enum.Font.GothamBold
-    authorName.TextSize = 16
+    authorName.TextSize = 17 -- Aumentado para móvil
     authorName.TextColor3 = Color3.fromRGB(50, 50, 50)
     authorName.TextXAlignment = Enum.TextXAlignment.Left
+    authorName.TextTruncate = Enum.TextTruncate.AtEnd
     authorName.Parent = authorNameContainer
     
     -- INSIGNIA AL LADO DEL NOMBRE (NO DE LA FECHA)
@@ -570,13 +572,13 @@ R.showArticle = function(articleId)
         verifiedBadge.Parent = authorNameContainer
     end
     
-    -- FECHA SIN INSIGNIA
+    -- FECHA SIN INSIGNIA (MEJOR TAMAÑO PARA MÓVIL)
     local articleDate = Instance.new("TextLabel")
-    articleDate.Size = UDim2.new(1, 0, 0, 16)
+    articleDate.Size = UDim2.new(1, 0, 0, 18) -- Aumentado
     articleDate.BackgroundTransparency = 1
     articleDate.Text = article.dateCreated
     articleDate.Font = Enum.Font.Gotham
-    articleDate.TextSize = 14
+    articleDate.TextSize = 15 -- Aumentado para mejor legibilidad
     articleDate.TextColor3 = Color3.fromRGB(120, 120, 120)
     articleDate.TextXAlignment = Enum.TextXAlignment.Left
     articleDate.LayoutOrder = 2
@@ -590,18 +592,19 @@ R.showArticle = function(articleId)
     separator.LayoutOrder = 5
     separator.Parent = R.articleViewFrame
     
-    -- Contenido del artículo (SIN LÍMITE DE TAMAÑO)
+    -- Contenido del artículo (OPTIMIZADO PARA MÓVIL)
     local articleContent = Instance.new("TextLabel")
     articleContent.Size = UDim2.new(1, 0, 0, 0)
     articleContent.AutomaticSize = Enum.AutomaticSize.Y
     articleContent.BackgroundTransparency = 1
     articleContent.Text = article.content
     articleContent.Font = Enum.Font.Gotham
-    articleContent.TextSize = 18
-    articleContent.TextColor3 = Color3.fromRGB(50, 50, 50)
+    articleContent.TextSize = 16 -- Reducido de 18 a 16 para mejor legibilidad en móvil
+    articleContent.TextColor3 = Color3.fromRGB(40, 40, 40) -- Más contraste
     articleContent.TextXAlignment = Enum.TextXAlignment.Left
     articleContent.TextYAlignment = Enum.TextYAlignment.Top
     articleContent.TextWrapped = true
+    articleContent.LineHeight = 1.4 -- Mejor espaciado entre líneas
     articleContent.LayoutOrder = 6
     articleContent.Parent = R.articleViewFrame
     

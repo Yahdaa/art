@@ -367,10 +367,10 @@ R.articleLayout.Padding = UDim.new(0, 20)
 R.articleLayout.Parent = R.articleViewFrame
  
 local articlePadding = Instance.new("UIPadding")
-articlePadding.PaddingLeft = UDim.new(0, 25)
-articlePadding.PaddingRight = UDim.new(0, 25)
-articlePadding.PaddingTop = UDim.new(0, 30)
-articlePadding.PaddingBottom = UDim.new(0, 30)
+articlePadding.PaddingLeft = UDim.new(0, 15) -- Reducido de 25 a 15 para móvil
+articlePadding.PaddingRight = UDim.new(0, 15) -- Reducido de 25 a 15 para móvil
+articlePadding.PaddingTop = UDim.new(0, 20) -- Reducido de 30 a 20
+articlePadding.PaddingBottom = UDim.new(0, 20) -- Reducido de 30 a 20
 articlePadding.Parent = R.articleViewFrame
  
 -- Botón volver
