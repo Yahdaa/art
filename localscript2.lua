@@ -857,13 +857,13 @@ R.createHomeSection = function(title, articles, parent, layoutOrder)
         cardTitle.LayoutOrder = 1
         cardTitle.Parent = articleCard
         
-        -- Descripción (LIMITADA para vista previa)
+        -- Descripción (MUY LIMITADA para vista previa)
         local cardDesc = Instance.new("TextLabel")
-        cardDesc.Size = UDim2.new(1, 0, 0, 60)
+        cardDesc.Size = UDim2.new(1, 0, 0, 40) -- Reducido de 60 a 40
         cardDesc.BackgroundTransparency = 1
-        cardDesc.Text = string.sub(article.description, 1, 80) .. (string.len(article.description) > 80 and "..." or "")
+        cardDesc.Text = string.sub(article.content or article.description, 1, 50) .. "..." -- Solo 50 caracteres
         cardDesc.Font = Enum.Font.Gotham
-        cardDesc.TextSize = 14
+        cardDesc.TextSize = 12 -- Reducido de 14 a 12
         cardDesc.TextColor3 = Color3.fromRGB(100, 100, 100)
         cardDesc.TextXAlignment = Enum.TextXAlignment.Left
         cardDesc.TextYAlignment = Enum.TextYAlignment.Top
@@ -958,13 +958,13 @@ R.createArticleCard = function(article, parent, index)
         R.showArticle(article.id)
     end)
     
-    -- Descripción (LIMITADA para vista previa)
+    -- Descripción (MUY LIMITADA para vista previa)
     local resultDesc = Instance.new("TextLabel")
-    resultDesc.Size = UDim2.new(1, 0, 0, 38)
+    resultDesc.Size = UDim2.new(1, 0, 0, 30) -- Reducido de 38 a 30
     resultDesc.BackgroundTransparency = 1
-    resultDesc.Text = string.sub(article.description, 1, 120) .. (string.len(article.description) > 120 and "..." or "")
+    resultDesc.Text = string.sub(article.content or article.description, 1, 60) .. "..." -- Solo 60 caracteres
     resultDesc.Font = Enum.Font.Gotham
-    resultDesc.TextSize = 15
+    resultDesc.TextSize = 13 -- Reducido de 15 a 13
     resultDesc.TextColor3 = Color3.fromRGB(70, 70, 70)
     resultDesc.TextXAlignment = Enum.TextXAlignment.Left
     resultDesc.TextYAlignment = Enum.TextYAlignment.Top
